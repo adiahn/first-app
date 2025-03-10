@@ -1,54 +1,36 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList} from 'react-native';
 
-export default function LoginForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+function App() {
+  const [navItems, setnavItems] = useState([
+    {item: "Home", id: 1},
+    {item: "About", id: 2},
+    {item: "Gallery", id: 3},
+    {item: "Contact", id: 4}
+  ])  
 
-  const handleLogin = () => {
-    if (!email || !password) {
-      Alert.alert('Error', 'All fields are required!');
-      return;
-    }
+const pressHandler = (id) => {
+    console.log(id)
+    setnavItems((prevPeople) => {
+      return prevPeople.filter(item => item.id != id)
+    })
+  }
 
-    if (!email.includes('@')) {
-      Alert.alert('Error', 'Enter a valid email!');
-      return;
-    }
 
-    if (password.length < 6) {
-      Alert.alert('Error', 'Password must be at least 6 characters!');
-      return;
-    }
-
-    Alert.alert('Success', 'Login Successful!');
-  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Login</Text>
-
-      <Text style={styles.label}>Email:</Text>
-      <TextInput 
-        style={styles.input}
-        placeholder="Enter your email"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
-
-      <Text style={styles.label}>Password:</Text>
-      <TextInput 
-        style={styles.input}
-        placeholder="Enter your password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
+      <View>
+        <FlatList 
+            data={navItems}
+            keyExtractor={(item) => item.id}
+            renderItem={({item}) => (
+              <TouchableOpacity onPress={() => pressHandler(item.id) }>
+                <Text style={styles.item}>{item.item}</Text>
+              </TouchableOpacity>
+            )}
+        />
+      </View>
     </View>
   );
 }
@@ -60,33 +42,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#f5f5f5'
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20
-  },
-  label: {
-    fontSize: 18,
-    marginBottom: 5
-  },
-  input: {
-    width: 250,
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    backgroundColor: 'white',
-    marginBottom: 15
-  },
-  button: {
-    backgroundColor: 'blue',
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5
-  },
-  buttonText: {
+  item:{
+    margin: 20,
+    padding: 24,
+    backgroundColor: 'red',
     color: 'white',
-    fontSize: 16
+    width: 300,
+    textAlign: 'center',
+    fontSize: 24,
+    borderRadius: 4
   }
 });
+
+
+export default App;
